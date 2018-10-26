@@ -37,10 +37,10 @@ public class Einmaleins {
 	    
 	    // ommiting Ones and Tenth  
 	    for(int i = 2; i <= 9; i++)
-	    	for(int j = i; j <= 9; j++)
+	    	for(int j = 2; j <= 9; j++)
 	    		list.add( new Tuple<Integer,Integer>(i,j) ); 
 	    
-	    //System.out.println(list.size());
+	    // System.out.println(list.size());
 	    
 	    Random rand = new Random();
 	    
@@ -55,8 +55,13 @@ public class Einmaleins {
 	    	
 	    	int x = 0;
 	    	int y = 0;
+	    	
+	    	x = list.get(rnd_idx).getX();
+	    	y = list.get(rnd_idx).getY();
+	    	
+	    	// only uncomment if you want to reduce the training set
 	    	// permute x and y 
-	    	if(rand.nextInt(2)%2 == 0)
+	    	/*
 	    	{
 	    		x = list.get(rnd_idx).getX();
 		    	y = list.get(rnd_idx).getY();
@@ -66,6 +71,7 @@ public class Einmaleins {
 	    		y = list.get(rnd_idx).getX();
 		    	x = list.get(rnd_idx).getY();
 	    	}
+	    	*/
 	    	
 	    	int result = x*y;
 	    	
@@ -139,7 +145,7 @@ public class Einmaleins {
 	    System.out.println("Das Programm lief " + (estimatedTime/1000.0) + " s. ");
 	    
 	    // get the date
-	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//"yyyy/MM/dd/HH:mm:ss");
+	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");//"yyyy/MM/dd/HH:mm:ss");
     	Date today = Calendar.getInstance().getTime();        
     	String reportDate = df.format(today);
     	// write the date, run time, answer right, answer wrong
@@ -195,7 +201,7 @@ public class Einmaleins {
 			out.close();
 	    	
 	    	} catch (IOException e) {
-	    		System.out.println("Exception oocured!");
+	    		System.out.println("Exception occured!");
 	    	    //exception handling left as an exercise for the reader
 	    	}
 	    
