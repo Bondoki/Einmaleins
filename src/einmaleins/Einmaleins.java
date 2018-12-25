@@ -20,7 +20,7 @@ public class Einmaleins {
 		// TODO Auto-generated method stub
 		System.out.println();
 		System.out.println("Hallo Fabi,");
-		System.out.println("na dann lass uns mal das 1*1 üben.");
+		System.out.println("na dann lass uns mal das 1*1 mit Multiplikation und Division üben.");
 		System.out.println();
 		System.out.println("Wenn du soweit bist, dann einfach \"Enter\" drücken.");
 		
@@ -29,6 +29,7 @@ public class Einmaleins {
 	    
 	    // generate list of all tuples 
 	    ArrayList< Tuple<Integer,Integer> > list = new ArrayList<>(); 
+	    ArrayList< Tuple<Integer,Integer> > list_division = new ArrayList<>(); 
 	    
 	    // generate list of wrong answers
 	    ArrayList< Tuple<Integer,Integer> > list_answer_wrong = new ArrayList<>(); 
@@ -38,7 +39,13 @@ public class Einmaleins {
 	    // ommiting Ones and Tenth  
 	    for(int i = 2; i <= 9; i++)
 	    	for(int j = 2; j <= 9; j++)
+	    	{	
+	    		// holds factor, factor
 	    		list.add( new Tuple<Integer,Integer>(i,j) ); 
+	    		
+	    		// holds duplicate for division
+	    		list_division.add( new Tuple<Integer,Integer>(i,j) );
+	    	}
 	    
 	    // System.out.println(list.size());
 	    
@@ -49,8 +56,110 @@ public class Einmaleins {
 	    
 	    long startTime = System.currentTimeMillis();
 	    
-	    while(list.size() != 0)
+	    
+	    while((list.size()+list_division.size()) != 0)
 	    {
+	    
+	    boolean multiplyTest = rand.nextBoolean();
+	    
+	    if(!multiplyTest)
+	    {
+	    	if(list_division.size() != 0)
+	    	{
+	    	int rnd_idx = rand.nextInt(list_division.size());
+	    	
+	    	int x = 0;
+	    	int y = 0;
+	    	
+	    	x = list_division.get(rnd_idx).getX();
+	    	y = list_division.get(rnd_idx).getY();
+	    	
+	    	
+	    	
+	    	// only uncomment if you want to reduce the training set
+	    	// permute x and y 
+	    	/*
+	    	{
+	    		x = list_division.get(rnd_idx).getX();
+		    	y = list_division.get(rnd_idx).getY();
+	    	}
+	    	else
+	    	{
+	    		y = list_division.get(rnd_idx).getX();
+		    	x = list_division.get(rnd_idx).getY();
+	    	}
+	    	*/
+	    	
+	    	// (x*y)/y = x
+	    	
+	    	int result = x;
+	    	x = x*y; 
+	    	
+	    	int try_input = 0;
+	    	
+	    	do{
+	    		try_input ++;
+	    		System.out.println();
+	    		System.out.println("Was ergibt " + x + " / " + y + " ?");
+
+	    		int result_input = 0;
+	    		
+	    		try {
+	    			result_input = sc.nextInt();
+	    		}catch (InputMismatchException exception) {
+	    			// Output unexpected InputMismatchExceptions.
+	    			// in the worst case we exit the program
+	    			if(sc.next().compareToIgnoreCase("exit") == 0)
+	    			{
+	    				System.exit(1);
+	    			}
+	    			
+	    			try_input--;
+	    			System.out.println("Die Eingabe verstehe ich nicht. Nochmal bitte.");
+	    			
+	    			continue;
+	    		}
+
+	    		
+	    		if(result_input != result)
+	    		{
+	    			if(try_input == 1)
+	    			{
+	    				list_answer_1stwrong.add( new Tuple<Integer,Integer>(list_division.get(rnd_idx).getX(),list_division.get(rnd_idx).getY()) ); 
+	    				System.out.println("Das ist leider nicht richtig. Versuch's nochmal.");
+	    			}
+	    			else if(try_input == 2)
+	    			{
+	    				list_answer_2ndwrong.add( new Tuple<Integer,Integer>(list_division.get(rnd_idx).getX(),list_division.get(rnd_idx).getY()) ); 
+	    				System.out.println("Das ist leider nicht richtig. Versuch's nochmal.");
+	    			}
+	    			else if(try_input == 3)
+	    			{
+	    				System.out.println("Antwort: " + x + " / " + y + " = " + result);
+	    				answer_wrong++;
+	    				list_answer_wrong.add( new Tuple<Integer,Integer>(list_division.get(rnd_idx).getX(),list_division.get(rnd_idx).getY()) ); 
+	    			}
+	    			//else
+	    			//	System.out.println("Das ist leider nicht richtig. Versuch's nochmal.");
+	    		}
+	    		else 
+	    		{
+	    			System.out.println("Richtig! " + x + " / " + y + " = " + result);
+	    			answer_right ++;
+	    			break;
+	    		}
+	    			
+	    		
+	    	}while(try_input < 3); // three tries 
+
+	    	// remove object from list
+	    	list_division.remove(rnd_idx);
+	    }
+	    }
+	    else
+	    {
+	    	if(list.size() != 0)
+	    	{
 	    	int rnd_idx = rand.nextInt(list.size());
 	    	
 	    	int x = 0;
@@ -58,6 +167,8 @@ public class Einmaleins {
 	    	
 	    	x = list.get(rnd_idx).getX();
 	    	y = list.get(rnd_idx).getY();
+	    	
+	    	
 	    	
 	    	// only uncomment if you want to reduce the training set
 	    	// permute x and y 
@@ -134,6 +245,9 @@ public class Einmaleins {
 
 	    	// remove object from list
 	    	list.remove(rnd_idx);
+	    }
+	    }
+	    
 	    }
 	    
 	    long estimatedTime = System.currentTimeMillis() - startTime;
